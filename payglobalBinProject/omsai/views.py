@@ -36,7 +36,6 @@ def upload(request):
 def getBinInformation(request):
     global DATABASE
     bin = request.data["bin"]
-    print(bin)
     if DATABASE.get(bin) != None:
 
         context = {
@@ -46,7 +45,7 @@ def getBinInformation(request):
         }
         return Response(context)
     context = {
-        "status_code":200,
+        "status_code":400,
         "msg":"Data Not Found",
         "data":[]
     }

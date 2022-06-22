@@ -1,10 +1,218 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
 
-</body>
-</html>
+
+
+
+<title>Bin Search</title>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css">
+
+<style>
+
+body{
+
+    background: #d1d5db;
+}
+
+.height{
+
+    height: 100vh;
+}
+
+.form{
+
+    position: relative;
+}
+
+.form .fa-search{
+
+    position: absolute;
+    top:20px;
+    left: 20px;
+    color: #9ca3af;
+
+}
+
+.form span{
+
+    position: absolute;
+    right: 17px;
+    top: 13px;
+    padding: 2px;
+    border-left: 1px solid #d1d5db;
+
+}
+
+.left-pan{
+    padding-left: 7px;
+}
+
+.left-pan i{
+
+   padding-left: 10px;
+}
+
+.form-input{
+
+    height: 55px;
+    /* text-indent: 100px; */
+    border-radius: 10px;
+    font-size: 30px;
+
+}
+
+.form-input:focus{
+
+    box-shadow: none;
+    border:none;
+}
+input{
+  font-weight:100px;
+  color:blue;
+}
+
+</style>
+
+<div class="container">
+
+            <div class="row height d-flex justify-content-center align-items-center">
+
+              <div class="col-md-6">
+
+                <div class="form">
+                  <i class="fa fa-search"></i>
+                  <input  id = "input" type="number"  class="form-control form-input" placeholder="Enter Bank Identification Number" oninput="check(this.value)">
+
+                </div>
+                <br><br>
+  <table class="table table-bordered">
+
+  <tbody id= "tb">
+
+  </tbody>
+</table>
+
+              </div>
+
+            </div>
+
+          </div>
+  <script>
+          async function check(val) {
+            console.log(val)
+             let length = val.length;
+             // console.log(length);
+             if(length == 0){
+               let input = document.getElementById("input")
+               input.value = ''
+               return;
+             }
+             if(length<4){
+               x = document.getElementById('tb')
+               x.innerHTML=""
+               return;
+             }
+             if(length > 6){
+               let input = document.getElementById("input")
+               input.value = val.slice(0, 6);
+               alert("more than 6 letters not allowed");
+               x = document.getElementById('tb')
+               x.innerHTML=""
+               return;
+             }
+             if(length>=4){
+               data = {
+                 "bin":val
+               }
+               options = {
+                 "method":"POST",
+
+                 headers: {
+                   'Content-Type': 'application/json',
+                 },
+                 body:JSON.stringify(data),
+
+
+               }
+               response = await fetch('/bin',options)
+               data = await  response.json()
+               // console.log(data["status_code"])
+               if(data["status_code"] == 400){
+                 x = document.getElementById('tb')
+                 x.innerHTML="<h1>data Not Found</h1>"
+                 return
+                  // x.innerHTML=""
+               }
+               data = data["data"]
+               console.log(data)
+               if(data["status_code"] == 200){
+
+               }
+               let elements = `
+                              <tr>
+                   <th scope="row">BIN RANGE</th>
+                   <th scope="row">${val}</th>
+                              </tr>
+
+                              <tr>
+                   <th scope="row">BRAND</th>
+                   <th scope="row">${data[0]}</th>
+                              </tr>
+
+                              <tr>
+                   <th scope="row">CARD ISSUER</th>
+                   <th scope="row">${data[1]}</th>
+                              </tr>
+
+                              <tr>
+                   <th scope="row">CARD TYPE</th>
+                   <th scope="row">${data[2]}</th>
+                              </tr>
+
+                              <tr>
+                   <th scope="row">CARD SUBTYPE</th>
+                   <th scope="row">${data[3]}</th>
+                              </tr>
+
+                              <tr>
+                   <th scope="row">COUNTRY</th>
+                   <th scope="row">${data[4]}</th>
+                              </tr>
+
+                              <tr>
+                   <th scope="row">COUNTRY CODE</th>
+                   <th scope="row">${data[5]}</th>
+                              </tr>
+
+                              <tr>
+                   <th scope="row">ISO</th>
+                   <th scope="row">${data[6]}</th>
+                              </tr>
+
+                              <tr>
+                   <th scope="row">CURRENCY CODE</th>
+                   <th scope="row">${data[7]}</th>
+                              </tr>
+
+                              <tr>
+                   <th scope="row">URl</th>
+                   <th scope="row">${data[8]}</th>
+                              </tr>
+
+                              <tr>
+                   <th scope="row">CONTACT INFORMATION</th>
+                   <th scope="row">${data[9]}</th>
+                              </tr>
+
+
+
+
+
+                 `
+                 x = document.getElementById('tb')
+                 x.innerHTML=elements
+                  // x.innerHTML=""
+
+             }
+
+
+          }
+    </script>
